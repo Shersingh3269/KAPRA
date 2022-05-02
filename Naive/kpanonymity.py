@@ -4,8 +4,8 @@ import pandas as pd
 import sys
 from loguru import logger
 import random
-from node import Node
-from dataset_anonymized import DatasetAnonymized
+from Naive.node import Node
+from Naive.dataset_anonymized import DatasetAnonymized
 max_level = 4
 
 
@@ -237,11 +237,14 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
             attributes_maximum_value.append(time_series[column].max())
             attributes_minimum_value.append(time_series[column].min())
         time_series_dict = dict()
-
+        
+        cols_series = list(time_series.columns)[1:]
+            
         # save dict file instead pandas
         for index, row in time_series.iterrows():
-            time_series_dict[row["Product_Code"]] = list(row["W0":"W51"])
-
+            time_series_dict[row[0]] = list(row[cols_series])
+              
+        
         # start k_anonymity_top_down
         time_series_k_anonymized = list()
         time_series_dict_copy = time_series_dict.copy()
@@ -287,6 +290,7 @@ def main(k_value=None, p_value=None, paa_value=None, dataset_path=None):
             # dataset_anonymized.compute_anonymized_data()
         dataset_anonymized.compute_anonymized_data()
         dataset_anonymized.save_on_file("Dataset\output.csv")
+
 
 
 if __name__ == "__main__":
